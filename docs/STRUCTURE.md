@@ -1,0 +1,63 @@
+# Source layout
+
+Complete delivered source; dependencies, caches and build output are excluded.
+
+| File | Area |
+|---|---|
+| `.env.example` | Project |
+| `.gitattributes` | Project |
+| `.github/workflows/ci.yml` | .github |
+| `.gitignore` | Project |
+| `README.md` | Project |
+| `backend/.dockerignore` | backend |
+| `backend/Dockerfile` | backend |
+| `backend/alembic/env.py` | backend |
+| `backend/alembic/versions/0001_foundation.py` | backend |
+| `backend/alembic.ini` | backend |
+| `backend/app/__init__.py` | backend |
+| `backend/app/auth/__init__.py` | backend |
+| `backend/app/auth/dependencies.py` | backend |
+| `backend/app/auth/router.py` | backend |
+| `backend/app/auth/security.py` | backend |
+| `backend/app/core/__init__.py` | backend |
+| `backend/app/core/config.py` | backend |
+| `backend/app/core/db.py` | backend |
+| `backend/app/main.py` | backend |
+| `backend/app/models.py` | backend |
+| `backend/app/platform/__init__.py` | backend |
+| `backend/app/platform/router.py` | backend |
+| `backend/app/schema_v1.py` | backend |
+| `backend/app/seed.py` | backend |
+| `backend/app/tenancy/__init__.py` | backend |
+| `backend/app/tenancy/dependencies.py` | backend |
+| `backend/app/tenancy/repository.py` | backend |
+| `backend/app/tenancy/router.py` | backend |
+| `backend/pytest.ini` | backend |
+| `backend/requirements.lock` | backend |
+| `backend/requirements.txt` | backend |
+| `backend/scripts/verify_schema_standalone.py` | backend |
+| `backend/tests/test_integration.py` | backend |
+| `backend/tests/test_security.py` | backend |
+| `compose.yaml` | Project |
+| `docs/API.md` | docs |
+| `docs/ARCHITECTURE.md` | docs |
+| `docs/ROADMAP.md` | docs |
+| `docs/STRUCTURE.md` | docs |
+| `docs/TEST_STATUS.md` | docs |
+| `docs/openapi.json` | docs |
+| `frontend/.dockerignore` | frontend |
+| `frontend/Dockerfile` | frontend |
+| `frontend/index.html` | frontend |
+| `frontend/nginx.conf` | frontend |
+| `frontend/package-lock.json` | frontend |
+| `frontend/package.json` | frontend |
+| `frontend/src/api.ts` | frontend |
+| `frontend/src/components/ui/button.tsx` | frontend |
+| `frontend/src/main.tsx` | frontend |
+| `frontend/src/style.css` | frontend |
+| `frontend/tsconfig.json` | frontend |
+| `frontend/vite.config.ts` | frontend |
+| `infra/init-db.sh` | infra |
+| `infra/postgres.Dockerfile` | infra |
+| `scripts/setup_env.py` | scripts |
+| `scripts/test_setup_env.py` | scripts |

@@ -1,0 +1,19 @@
+name: Foundation checks
+on: [push, pull_request]
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Disposable configuration
+        run: |
+          python - <<'PY'
+          import secrets
+          from pathlib import Path
+          Path('.env').write_text('\n'.join(f'{key}={secrets.token_hex(32)}' for key in ['DB_PASSWORD','APP_DB_PASSWORD','JWT_SECRET'])+'\n')
+          PY
+      - run: python3 scripts/test_setup_env.py
+      - run: docker compose build
+      - run: docker compose --profile test run --rm tests
+      - if: always()
+        run: docker compose down -v

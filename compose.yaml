@@ -1,0 +1,56 @@
+services:
+  db:
+    build:
+      context: ./infra
+      dockerfile: postgres.Dockerfile
+    environment:
+      POSTGRES_USER: smartretail_migrator
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD}
+      POSTGRES_DB: smartretail
+      APP_DB_PASSWORD: ${APP_DB_PASSWORD:?Set APP_DB_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -U smartretail_migrator -d smartretail']
+      interval: 3s
+      retries: 20
+  redis:
+    image: redis:7-alpine
+    command: [redis-server, --appendonly, 'yes']
+    volumes: [redisdata:/data]
+  migrate:
+    build: ./backend
+    command: [alembic, upgrade, head]
+    environment:
+      MIGRATION_DATABASE_URL: postgresql+psycopg://smartretail_migrator:${DB_PASSWORD}@db/smartretail
+    depends_on:
+      db: {condition: service_healthy}
+  api:
+    build: ./backend
+    environment:
+      DATABASE_URL: postgresql+psycopg://smartretail_app:${APP_DB_PASSWORD}@db/smartretail
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET}
+      REDIS_URL: redis://redis:6379/0
+      SECURE_COOKIES: ${SECURE_COOKIES:-false}
+      WEB_ORIGIN: ${WEB_ORIGIN:-http://localhost:8080}
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+      redis: {condition: service_started}
+  web:
+    build: ./frontend
+    ports: ['127.0.0.1:8080:80']
+    depends_on: [api]
+  tests:
+    profiles: [test]
+    build: ./backend
+    command: [pytest, -q]
+    environment:
+      DATABASE_URL: postgresql+psycopg://smartretail_app:${APP_DB_PASSWORD}@db/smartretail
+      JWT_SECRET: ${JWT_SECRET}
+      SECURE_COOKIES: 'false'
+      RUN_DB_TESTS: '1'
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+volumes:
+  pgdata:
+  redisdata:
