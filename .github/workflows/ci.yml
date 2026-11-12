@@ -19,9 +19,10 @@ jobs:
         run: docker compose up -d api worker scheduler web
       - name: HTTP and background billing smoke test
         run: |
-          curl --fail --retry 15 --retry-connrefused --retry-delay 2 http://localhost:8080/api/v1/subscriptions/plans
+          curl --fail --retry 15 --retry-all-errors --connect-timeout 3 --max-time 10 --retry-delay 2 http://localhost:8080/api/v1/subscriptions/plans
           docker compose exec -T api python scripts/smoke_billing.py
       - if: failure()
         run: docker compose logs --tail=100 migrate api worker scheduler
       - if: always()
         run: docker compose down -v
+
