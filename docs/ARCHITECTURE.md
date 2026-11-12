@@ -4,7 +4,7 @@
 
 | Area | Decision and consequence |
 |---|---|
-| Architecture | Modular monolith with auth, tenancy and platform modules. Future billing and retail modules share ACID transactions initially. Avoid distributed transactions in the first release. |
+| Architecture | Modular monolith with auth, tenancy and platform modules. Billing is implemented with durable operations and Celery reconciliation; future retail modules share ACID transactions initially. Avoid distributed transactions in the first release. |
 | Backend | Python 3.12, FastAPI, synchronous SQLAlchemy sessions with psycopg. Blocking database work runs in synchronous endpoint/dependency workers. One session/transaction per request. |
 | Database | PostgreSQL, UUID keys, explicit composite tenant foreign keys, Alembic revisions. Runtime role cannot bypass RLS; startup rejects superuser/BYPASSRLS connections. |
 | Tenant model | Tenant is the business identity in Milestone 1. Avoid a second identical Business row; a business-profile table will hold tax/legal configuration when needed. |
@@ -176,3 +176,7 @@ Validate active entitlement and cashier permission; lock inventory balances in s
 - SQLAlchemy session transactions: https://docs.sqlalchemy.org/en/20/orm/session_basics.html
 
 The selected defaults are architecture decisions for this project, not a claim that all commercial requirements are already implemented.
+
+## Milestone 2 billing
+
+See [the billing implementation guide](MILESTONE_2.md) for the provider boundary, durable operation flow, invoice isolation, entitlement enforcement and production setup.

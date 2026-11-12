@@ -5,6 +5,7 @@ from sqlalchemy import select
 from app.core.db import SessionLocal, context
 from app.models import User, Tenant, Membership, Role, Branch
 from app.auth.security import hasher
+from app.billing.service import create_trial
 
 def main():
     password = os.environ['DEMO_PASSWORD']
@@ -21,6 +22,7 @@ def main():
             context(db, 'app.user_id', user.id)
             tenant = Tenant(name=name, owner_id=user.id, creation_key=uuid.uuid4())
             db.add(tenant); db.flush(); context(db, 'app.tenant_id', tenant.id)
+            create_trial(db, tenant.id)
             role = db.scalar(select(Role).where(Role.name == 'owner'))
             db.add(Membership(tenant_id=tenant.id,user_id=user.id,role_id=role.id))
             db.add(Branch(tenant_id=tenant.id,name=f'{name} headquarters'))
