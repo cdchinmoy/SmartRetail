@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "SmartRetail Cloud \u2014 Foundation",
-    "version": "0.1.0"
+    "version": "0.2.0"
   },
   "paths": {
     "/api/v1/auth/register": {
@@ -821,6 +821,822 @@
         }
       }
     },
+    "/api/v1/subscriptions/plans": {
+      "get": {
+        "tags": [
+          "Subscriptions and billing"
+        ],
+        "summary": "Plans",
+        "operationId": "plans_api_v1_subscriptions_plans_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/subscriptions/current": {
+      "get": {
+        "tags": [
+          "Subscriptions and billing"
+        ],
+        "summary": "Current",
+        "operationId": "current_api_v1_subscriptions_current_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "X-Tenant-Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/billing/checkout": {
+      "post": {
+        "tags": [
+          "Subscriptions and billing"
+        ],
+        "summary": "Checkout",
+        "operationId": "checkout_api_v1_billing_checkout_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "idempotency-key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Idempotency-Key"
+            }
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "X-Tenant-Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Selection"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/subscriptions/change": {
+      "post": {
+        "tags": [
+          "Subscriptions and billing"
+        ],
+        "summary": "Change",
+        "operationId": "change_api_v1_subscriptions_change_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "idempotency-key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Idempotency-Key"
+            }
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "X-Tenant-Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Selection"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/subscriptions/cancel": {
+      "post": {
+        "tags": [
+          "Subscriptions and billing"
+        ],
+        "summary": "Cancel",
+        "operationId": "cancel_api_v1_subscriptions_cancel_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "idempotency-key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Idempotency-Key"
+            }
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "X-Tenant-Id"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/billing/reconcile": {
+      "post": {
+        "tags": [
+          "Subscriptions and billing"
+        ],
+        "summary": "Reconcile",
+        "operationId": "reconcile_api_v1_billing_reconcile_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "idempotency-key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Idempotency-Key"
+            }
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "X-Tenant-Id"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/billing/sandbox/{action}": {
+      "post": {
+        "tags": [
+          "Subscriptions and billing"
+        ],
+        "summary": "Sandbox",
+        "operationId": "sandbox_api_v1_billing_sandbox__action__post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "action",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "enum": [
+                "charge",
+                "fail"
+              ],
+              "type": "string",
+              "title": "Action"
+            }
+          },
+          {
+            "name": "idempotency-key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Idempotency-Key"
+            }
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "X-Tenant-Id"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/billing/operations": {
+      "get": {
+        "tags": [
+          "Subscriptions and billing"
+        ],
+        "summary": "Operations",
+        "operationId": "operations_api_v1_billing_operations_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 20,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "X-Tenant-Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/billing/invoices": {
+      "get": {
+        "tags": [
+          "Subscriptions and billing"
+        ],
+        "summary": "Invoices",
+        "operationId": "invoices_api_v1_billing_invoices_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "X-Tenant-Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/billing/invoices/{invoice_id}": {
+      "get": {
+        "tags": [
+          "Subscriptions and billing"
+        ],
+        "summary": "Invoice",
+        "operationId": "invoice_api_v1_billing_invoices__invoice_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "invoice_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Invoice Id"
+            }
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "X-Tenant-Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/billing/webhooks/{provider}": {
+      "post": {
+        "tags": [
+          "Subscriptions and billing"
+        ],
+        "summary": "Webhook",
+        "operationId": "webhook_api_v1_billing_webhooks__provider__post",
+        "parameters": [
+          {
+            "name": "provider",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "enum": [
+                "sandbox",
+                "razorpay"
+              ],
+              "type": "string",
+              "title": "Provider"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/platform/billing/plans": {
+      "get": {
+        "tags": [
+          "Subscriptions and billing"
+        ],
+        "summary": "Admin Plans",
+        "operationId": "admin_plans_api_v1_platform_billing_plans_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Subscriptions and billing"
+        ],
+        "summary": "Create Plan",
+        "operationId": "create_plan_api_v1_platform_billing_plans_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlanInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/platform/billing/plans/{code}/provider": {
+      "put": {
+        "tags": [
+          "Subscriptions and billing"
+        ],
+        "summary": "Map Plan",
+        "operationId": "map_plan_api_v1_platform_billing_plans__code__provider_put",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Code"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Mapping"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/platform/billing/overview": {
+      "get": {
+        "tags": [
+          "Subscriptions and billing"
+        ],
+        "summary": "Overview",
+        "operationId": "overview_api_v1_platform_billing_overview_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/platform/billing/tenants/{tenant_id}/operations/{operation_id}/recover": {
+      "post": {
+        "tags": [
+          "Subscriptions and billing"
+        ],
+        "summary": "Recover",
+        "operationId": "recover_api_v1_platform_billing_tenants__tenant_id__operations__operation_id__recover_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "tenant_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Tenant Id"
+            }
+          },
+          {
+            "name": "operation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Operation Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Recovery"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/health": {
       "get": {
         "summary": "Health",
@@ -902,6 +1718,27 @@
         "type": "object",
         "title": "HTTPValidationError"
       },
+      "Mapping": {
+        "properties": {
+          "monthly_id": {
+            "type": "string",
+            "pattern": "^plan_[A-Za-z0-9]+$",
+            "title": "Monthly Id"
+          },
+          "yearly_id": {
+            "type": "string",
+            "pattern": "^plan_[A-Za-z0-9]+$",
+            "title": "Yearly Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "monthly_id",
+          "yearly_id"
+        ],
+        "title": "Mapping"
+      },
       "MemberInput": {
         "properties": {
           "email": {
@@ -938,6 +1775,100 @@
           "name"
         ],
         "title": "Named"
+      },
+      "PlanInput": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_-]{1,39}$",
+            "title": "Code"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 80,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "monthly_amount": {
+            "type": "integer",
+            "maximum": 100000000.0,
+            "exclusiveMinimum": 0.0,
+            "title": "Monthly Amount"
+          },
+          "yearly_amount": {
+            "type": "integer",
+            "maximum": 1000000000.0,
+            "exclusiveMinimum": 0.0,
+            "title": "Yearly Amount"
+          },
+          "branch_limit": {
+            "type": "integer",
+            "maximum": 100000.0,
+            "minimum": 1.0,
+            "title": "Branch Limit"
+          },
+          "user_limit": {
+            "type": "integer",
+            "maximum": 100000.0,
+            "minimum": 1.0,
+            "title": "User Limit"
+          },
+          "warehouses": {
+            "type": "boolean",
+            "title": "Warehouses",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "code",
+          "name",
+          "monthly_amount",
+          "yearly_amount",
+          "branch_limit",
+          "user_limit"
+        ],
+        "title": "PlanInput"
+      },
+      "Recovery": {
+        "properties": {
+          "provider_ref": {
+            "type": "string",
+            "pattern": "^sub_[A-Za-z0-9]+$",
+            "title": "Provider Ref"
+          }
+        },
+        "type": "object",
+        "required": [
+          "provider_ref"
+        ],
+        "title": "Recovery"
+      },
+      "Selection": {
+        "properties": {
+          "plan": {
+            "type": "string",
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Plan"
+          },
+          "cycle": {
+            "type": "string",
+            "enum": [
+              "monthly",
+              "yearly"
+            ],
+            "title": "Cycle"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "plan",
+          "cycle"
+        ],
+        "title": "Selection"
       },
       "Status": {
         "properties": {

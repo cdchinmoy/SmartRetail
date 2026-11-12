@@ -1,8 +1,10 @@
-# SmartRetail Cloud · Milestone 1
+# SmartRetail Cloud · Milestones 1–2
 
 An executable SaaS foundation using FastAPI, SQLAlchemy, PostgreSQL and React/TypeScript. Includes tenant creation, membership RBAC, branches, warehouse creation, audit records, refresh rotation, and metadata-only platform administration.
 
-**Development foundation, not a production-ready commercial release.** The full brief is staged across five milestones. Payment processing, subscription enforcement and POS are deliberately not implemented in this milestone. Review `docs/TEST_STATUS.md` before treating isolation as verified.
+**Development foundation, not a production-ready commercial release.** The full brief is staged across five milestones. Subscription plans, trials, entitlements, provider reconciliation and the billing workspace are implemented. Billing defaults to a local sandbox; Razorpay requires your configuration and merchant acceptance tests. POS and retail operations remain Milestone 3 work. Review `docs/TEST_STATUS.md` before treating isolation as verified.
+
+See **[Milestone 2 setup and billing guide](docs/MILESTONE_2.md)** for sandbox testing, Razorpay configuration, background jobs and recovery.
 
 ## Start locally
 
@@ -59,6 +61,7 @@ Without Docker, install `backend/requirements.lock` in a Python 3.12 virtual env
 
 ## What's here
 
+- Subscription engine setup: `docs/MILESTONE_2.md`
 - Architecture and database design: `docs/ARCHITECTURE.md`
 - API examples and contracts: `docs/API.md` and `docs/openapi.json`
 - Files and module boundaries: `docs/STRUCTURE.md`
@@ -69,6 +72,6 @@ Without Docker, install `backend/requirements.lock` in a Python 3.12 virtual env
 
 ## Before production
 
-Implement and test identity verification, password reset, optional MFA, durable email delivery, account abuse prevention, commercial entitlements, tenant-scoped invitations and branch assignments. Resolve every unrun integration check. Deploy behind HTTPS with `SECURE_COOKIES=true` and the exact public `WEB_ORIGIN`; implement trusted-proxy client IP handling (the development API currently rate-limits by direct peer IP, shared behind Nginx). Define secure secret rotation, backups and tested restore drills, retention, monitoring, and deployment rollback. Add dependency vulnerability scanning and a security review.
+Implement and test identity verification, password reset, optional MFA, durable email delivery, account abuse prevention, merchant billing acceptance tests, tenant-scoped invitations and branch assignments. Resolve every unrun integration check. Deploy behind HTTPS with `SECURE_COOKIES=true` and the exact public `WEB_ORIGIN`; implement trusted-proxy client IP handling (the development API currently rate-limits by direct peer IP, shared behind Nginx). Define secure secret rotation, backups and tested restore drills, retention, monitoring, and deployment rollback. Add dependency vulnerability scanning and a security review.
 
 A Sites static/Worker deployment cannot host the requested Python/PostgreSQL stack. This handoff is a Docker application source package; it has not been deployed to a hosting service.

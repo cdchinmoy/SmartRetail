@@ -2,8 +2,8 @@
 
 | Milestone | Scope | Current status / exit requirement |
 |---|---|---|
-| 1 · Foundation | Auth, tenant creation, memberships, RBAC, RLS, metadata admin, local runtime | Source implemented; local unit/schema/frontend checks passed; integration suite and full-stack startup require execution elsewhere |
-| 2 · Subscription engine | Plans, entitlements/quotas, trials, provider abstraction, checkout, verified webhooks, renewal and cancellation | Not implemented; must test duplicate/out-of-order webhook events, expired trials, scheduled downgrades and grace periods |
+| 1 · Foundation | Auth, tenant creation, memberships, RBAC, RLS, metadata admin, local runtime | Merged; foundation CI passed. Billing release adds further database and lifecycle tests. |
+| 2 · Subscription engine | Plans, entitlements/quotas, trials, provider abstraction, checkout, verified webhooks, renewal and cancellation | Implemented in this branch: catalog, trial/entitlement checks, provider adapter, signed webhook inbox, background reconciliation, scheduled changes, cancellation and billing UI. Merchant acceptance tests and production configuration remain required. |
 | 3 · Retail MVP | Business profile/onboarding, catalog, customers, stock ledger, POS, invoices and dashboard | Not implemented; must prove no oversell or double stock deduction under concurrent and duplicate checkout |
 | 4 · Expansion | Suppliers, purchasing, receipts, expenses, staff invitations, branch assignments, reports and transfers | Not implemented; test composite tenant FKs, multi-branch permissions and stock reconciliation |
 | 5 · Commercial launch | Marketing/pricing, verified signup, hardened infrastructure, observability, backups, docs and review | Not implemented; security review, restore drill, load tests, monitoring and deployment rollback are release gates |
@@ -25,13 +25,13 @@
 
 ## Remaining foundation hardening
 
-Run the five database integration tests and full Docker startup. Verify browser login, refresh, workspace switching and permission-specific UI. Implement email/phone verification, password reset, optional MFA, refresh-family cleanup, invitation lifecycle, finer branch-level scope, custom role management, account abuse limits and structured error logging for unexpected exceptions. Add metrics and tracing with tenant privacy controls. These are not silently represented as completed authentication features.
+Foundation integration tests now pass. Verify browser workflows and merchant-specific hosted checkout before launch. Implement email/phone verification, password reset, optional MFA, refresh-family cleanup, invitation lifecycle, finer branch-level scope, custom role management, account abuse limits and structured error logging for unexpected exceptions. Add metrics and tracing with tenant privacy controls. These are not silently represented as completed authentication features.
 
 The demo permits account creation without email verification. Do not open self-service signup to the public before verification and abuse controls are implemented. The platform UI has no support-access escalation; define an explicit tenant-approved, scoped, expiring support grant before adding it.
 
 ## Future backend boundaries
 
-Add `billing/{provider,service,repository,router,schemas}.py`, `catalog`, `inventory`, `sales`, `purchasing`, `customers`, `reports`, and `jobs` only with real functionality. Shared core remains limited to configuration, database, context and observability; do not turn it into a catch-all for business logic. Extract services only when measured scaling or ownership boundaries justify the operational cost.
+Billing is implemented in `app/billing`; next add `catalog`, `inventory`, `sales`, `purchasing`, `customers`, `reports`, and `jobs` only with real functionality. Shared core remains limited to configuration, database, context and observability; do not turn it into a catch-all for business logic. Extract services only when measured scaling or ownership boundaries justify the operational cost.
 
 ## Future frontend areas
 
@@ -39,4 +39,4 @@ Separate public marketing/auth, tenant operations and platform control-plane rou
 
 ## Run and test
 
-See the root README for exact Compose commands. The current validation evidence is in `TEST_STATUS.md`. Payment-webhook, subscription-expiry and concurrent-POS tests are **not applicable yet**, rather than passed or replaced with placeholders.
+See the root README for exact Compose commands. The current validation evidence is in `TEST_STATUS.md`. Billing webhook, expiry, quota and downgrade tests are implemented. Concurrent POS tests remain Milestone 3 work.

@@ -8,6 +8,7 @@ from app.auth.dependencies import current_user
 from app.tenancy.dependencies import require
 from app.tenancy.repository import BranchRepository
 from app.models import Tenant, Membership, Role, User, Branch, Warehouse, Audit
+from app.billing.service import create_trial, require_capacity
 
 router = APIRouter(tags=['Tenant foundation'])
 class Named(BaseModel):
@@ -44,6 +45,7 @@ def create_tenant(body: Named, idempotency_key: uuid.UUID = Header(), user=Depen
     tenant = Tenant(name=body.name, owner_id=user.id, creation_key=idempotency_key)
     db.add(tenant); db.flush()
     context(db, 'app.tenant_id', tenant.id)
+    create_trial(db, tenant.id)
     role = db.scalar(select(Role).where(Role.name == 'owner'))
     db.add(Membership(tenant_id=tenant.id, user_id=user.id, role_id=role.id))
     db.add(Branch(tenant_id=tenant.id, name='Main branch'))
@@ -56,6 +58,7 @@ def branches(offset: int = Query(0, ge=0), limit: int = Query(50, ge=1, le=100),
 
 @router.post('/branches', response_model=BranchOut, status_code=201)
 def create_branch(body: Named, ctx=Depends(require('branches.write')), db: Session = Depends(db_session)):
+    require_capacity(db, ctx.tenant_id, resource='branches')
     branch = BranchRepository(db, ctx.tenant_id).create(body.name)
     audit(db, ctx, 'branch.created', branch.id)
     return branch
@@ -71,6 +74,7 @@ def get_branch(branch_id: uuid.UUID, ctx=Depends(require('branches.read')), db: 
 def create_warehouse(body: WarehouseInput, ctx=Depends(require('branches.write')), db: Session = Depends(db_session)):
     if not BranchRepository(db, ctx.tenant_id).get(body.branch_id):
         raise HTTPException(404, 'Branch not found')
+    require_capacity(db, ctx.tenant_id, feature='warehouses')
     w = Warehouse(tenant_id=ctx.tenant_id, branch_id=body.branch_id, name=body.name)
     db.add(w); db.flush(); audit(db, ctx, 'warehouse.created', w.id)
     return {'id': w.id, 'name': w.name, 'branch_id': w.branch_id}
@@ -82,6 +86,7 @@ def members(ctx=Depends(require('members.manage')), db: Session = Depends(db_ses
 
 @router.post('/members', status_code=201)
 def add_member(body: MemberInput, ctx=Depends(require('members.manage')), db: Session = Depends(db_session)):
+    require_capacity(db, ctx.tenant_id, resource='users')
     user = db.scalar(select(User).where(User.email == str(body.email).lower(), User.active.is_(True)))
     if not user:
         raise HTTPException(404, 'Registered account not found')

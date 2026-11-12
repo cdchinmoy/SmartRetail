@@ -27,12 +27,35 @@ services:
       db: {condition: service_healthy}
   api:
     build: ./backend
-    environment:
+    environment: &app_env
       DATABASE_URL: postgresql+psycopg://smartretail_app:${APP_DB_PASSWORD}@db/smartretail
       JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET}
       REDIS_URL: redis://redis:6379/0
       SECURE_COOKIES: ${SECURE_COOKIES:-false}
       WEB_ORIGIN: ${WEB_ORIGIN:-http://localhost:8080}
+      ENVIRONMENT: ${ENVIRONMENT:-development}
+      BILLING_PROVIDER: ${BILLING_PROVIDER:-sandbox}
+      TRIAL_DAYS: ${TRIAL_DAYS:-14}
+      GRACE_DAYS: ${GRACE_DAYS:-3}
+      RAZORPAY_KEY_ID: ${RAZORPAY_KEY_ID:-}
+      RAZORPAY_KEY_SECRET: ${RAZORPAY_KEY_SECRET:-}
+      RAZORPAY_WEBHOOK_SECRET: ${RAZORPAY_WEBHOOK_SECRET:-}
+      RAZORPAY_PREVIOUS_WEBHOOK_SECRET: ${RAZORPAY_PREVIOUS_WEBHOOK_SECRET:-}
+      SANDBOX_WEBHOOK_SECRET: ${SANDBOX_WEBHOOK_SECRET:-}
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+      redis: {condition: service_started}
+  worker:
+    build: ./backend
+    command: [celery, -A, app.billing.tasks:celery, worker, --loglevel=INFO, --concurrency=2]
+    environment: *app_env
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+      redis: {condition: service_started}
+  scheduler:
+    build: ./backend
+    command: [celery, -A, app.billing.tasks:celery, beat, --loglevel=INFO, --schedule=/tmp/celerybeat-schedule]
+    environment: *app_env
     depends_on:
       migrate: {condition: service_completed_successfully}
       redis: {condition: service_started}

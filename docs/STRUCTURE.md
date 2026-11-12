@@ -1,6 +1,6 @@
 # Source layout
 
-Complete delivered source; dependencies, caches and build output are excluded.
+Dependencies, caches and build output are excluded.
 
 | File | Area |
 |---|---|
@@ -11,14 +11,23 @@ Complete delivered source; dependencies, caches and build output are excluded.
 | `README.md` | Project |
 | `backend/.dockerignore` | backend |
 | `backend/Dockerfile` | backend |
+| `backend/alembic.ini` | backend |
 | `backend/alembic/env.py` | backend |
 | `backend/alembic/versions/0001_foundation.py` | backend |
-| `backend/alembic.ini` | backend |
+| `backend/alembic/versions/0002_subscriptions.py` | backend |
 | `backend/app/__init__.py` | backend |
 | `backend/app/auth/__init__.py` | backend |
 | `backend/app/auth/dependencies.py` | backend |
 | `backend/app/auth/router.py` | backend |
 | `backend/app/auth/security.py` | backend |
+| `backend/app/billing/__init__.py` | backend |
+| `backend/app/billing/models.py` | backend |
+| `backend/app/billing/providers.py` | backend |
+| `backend/app/billing/router.py` | backend |
+| `backend/app/billing/schema_v2.py` | backend |
+| `backend/app/billing/service.py` | backend |
+| `backend/app/billing/tasks.py` | backend |
+| `backend/app/billing/worker.py` | backend |
 | `backend/app/core/__init__.py` | backend |
 | `backend/app/core/config.py` | backend |
 | `backend/app/core/db.py` | backend |
@@ -35,12 +44,17 @@ Complete delivered source; dependencies, caches and build output are excluded.
 | `backend/pytest.ini` | backend |
 | `backend/requirements.lock` | backend |
 | `backend/requirements.txt` | backend |
+| `backend/scripts/smoke_billing.py` | backend |
 | `backend/scripts/verify_schema_standalone.py` | backend |
+| `backend/tests/conftest.py` | backend |
+| `backend/tests/test_billing_integration.py` | backend |
+| `backend/tests/test_billing_unit.py` | backend |
 | `backend/tests/test_integration.py` | backend |
 | `backend/tests/test_security.py` | backend |
 | `compose.yaml` | Project |
 | `docs/API.md` | docs |
 | `docs/ARCHITECTURE.md` | docs |
+| `docs/MILESTONE_2.md` | docs |
 | `docs/ROADMAP.md` | docs |
 | `docs/STRUCTURE.md` | docs |
 | `docs/TEST_STATUS.md` | docs |
@@ -53,6 +67,7 @@ Complete delivered source; dependencies, caches and build output are excluded.
 | `frontend/package.json` | frontend |
 | `frontend/src/api.ts` | frontend |
 | `frontend/src/components/ui/button.tsx` | frontend |
+| `frontend/src/features/Billing.tsx` | frontend |
 | `frontend/src/main.tsx` | frontend |
 | `frontend/src/style.css` | frontend |
 | `frontend/tsconfig.json` | frontend |

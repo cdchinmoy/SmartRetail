@@ -12,6 +12,7 @@ from app.core.db import engine
 from app.auth.router import router as auth
 from app.tenancy.router import router as tenancy
 from app.platform.router import router as platform
+from app.billing.router import router as billing
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('smartretail')
@@ -24,8 +25,8 @@ async def lifespan(app):
             raise RuntimeError('Application role must not be superuser or BYPASSRLS')
     yield
 
-app = FastAPI(title='SmartRetail Cloud — Foundation', version='0.1.0', lifespan=lifespan)
-for router in (auth, tenancy, platform):
+app = FastAPI(title='SmartRetail Cloud — Foundation', version='0.2.0', lifespan=lifespan)
+for router in (auth, tenancy, platform, billing):
     app.include_router(router, prefix='/api/v1')
 
 @app.middleware('http')
